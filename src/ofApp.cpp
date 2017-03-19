@@ -13,29 +13,20 @@ void ofApp::setup(){
 	
 	//system ("(sleep 1; wmctrl -r \"app\" -b toggle,above; wmctrl -a \"/bin/bash\") &");
 
-
 	ofSetFrameRate(60);
 	//ofSetVerticalSync(true);
 	
 	startTime = ofGetElapsedTimeMillis();
 	elapsedTime = 0;
 
-
-	path.rectangle(0.0, 0.0, 100.0, 100.0);
-	//fbo.allocate(100,100,GL_RED);
-	//fbo.allocate(100,100,GL_LUMINANCE);
-	fbo.allocate(100,100,GL_RGBA);
-	fbo.begin();
-	{
-		ofClear(0,0,0,0);
-		//ofBackground(255,255,255);
-		ofSetColor(255);
-		ofDrawEllipse(100, 100, 50, 50);
+	ofBackground(0, 0, 255);
+	ofSetCircleResolution(100);
+	fbo.allocate(275,228,GL_RGBA);
+	fbo.begin();{
+		ofDrawEllipse(137, 114, 200, 200);
     }
-	//path.draw();
 	fbo.end();
 	gifloader.load("images/beatles.gif");
-	//gifloader.pages[gifCounter].getTexture().setAlphaMask(fbo.getTexture());
 	
 	for (int i = 0; (unsigned)i < gifloader.pages.size(); ++i){
 		 gifloader.pages[i].getTexture().setAlphaMask(fbo.getTexture());
@@ -44,6 +35,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
 	elapsedTime = ofGetElapsedTimeMillis() - startTime;
 	if(elapsedTime >= 1000){
 		//ofLog(OF_LOG_NOTICE, ofToString(OF_WINDOW));
@@ -57,18 +49,17 @@ void ofApp::update(){
 		gifCounter++;
 		if ((unsigned)gifCounter > gifloader.pages.size()-1) gifCounter = 0;
 		gifloader.pages[gifCounter].getTexture().setAlphaMask(fbo.getTexture());
-
-		/*
-		for (int i = 0; i < gifloader.pages.size(); ++i){
-			 gifloader.pages[i].getTexture().setAlphaMask(fbo.getTexture());
-		}
-		*/
-
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	//ofBackground(0, 0, 255);
+
+	ofSetColor(255, 51, 0);
+	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
+	ofSetColor(255);
+		
 	gifloader.pages[gifCounter].draw(0, 0);
 }
 

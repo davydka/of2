@@ -25,8 +25,6 @@ class ofApp : public ofBaseApp{
 		int startTime;
 		int elapsedTime;
 
-		ofPath path;
-		ofImage img;
 		ofFbo fbo;
 		ofxGIF::fiGifLoader gifloader;
 };
