@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGif.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,4 +24,9 @@ class ofApp : public ofBaseApp{
 		
 		int startTime;
 		int elapsedTime;
+
+		ofPath path;
+		ofImage img;
+		ofFbo fbo;
+		ofxGIF::fiGifLoader gifloader;
 };

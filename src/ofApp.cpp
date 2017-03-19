@@ -1,29 +1,17 @@
 #include "ofApp.h"
 
+int gifCounter = 0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
 
-	ofSetWindowShape(100, 566);
-	ofSetWindowPosition(0, 100);
+	ofSetWindowShape(275, 228);
+	ofSetWindowPosition(1091, 100);
 	ofSetWindowTitle("app");
 	
-	bool topmost;
-	//topmost = true;
-	topmost = false;
-	if(topmost){
-		
-		int i;
-		i=system ("which wmctrl");
-		if(i == 0){ //0 is ok, 256 means command isn't found
-			int ii;
-			printf ("Setting window to topmost...\n");
-			ii=system ("(sleep 1; wmctrl -r \"app\" -b toggle,above; wmctrl -a \"/bin/bash\") &");
-			printf ("wmctrl value returned was: %d.\n",ii);
-		}
-	}
+	//system ("(sleep 1; wmctrl -r \"app\" -b toggle,above; wmctrl -a \"/bin/bash\") &");
 
 
 	ofSetFrameRate(60);
@@ -32,6 +20,26 @@ void ofApp::setup(){
 	startTime = ofGetElapsedTimeMillis();
 	elapsedTime = 0;
 
+
+	path.rectangle(0.0, 0.0, 100.0, 100.0);
+	//fbo.allocate(100,100,GL_RED);
+	//fbo.allocate(100,100,GL_LUMINANCE);
+	fbo.allocate(100,100,GL_RGBA);
+	fbo.begin();
+	{
+		ofClear(0,0,0,0);
+		//ofBackground(255,255,255);
+		ofSetColor(255);
+		ofDrawEllipse(100, 100, 50, 50);
+    }
+	//path.draw();
+	fbo.end();
+	gifloader.load("images/beatles.gif");
+	//gifloader.pages[gifCounter].getTexture().setAlphaMask(fbo.getTexture());
+	
+	for (int i = 0; (unsigned)i < gifloader.pages.size(); ++i){
+		 gifloader.pages[i].getTexture().setAlphaMask(fbo.getTexture());
+	}
 }
 
 //--------------------------------------------------------------
@@ -42,11 +50,26 @@ void ofApp::update(){
 		//ofLog(OF_LOG_NOTICE, "the number is" + ofToString(ofGetElapsedTimeMillis()));
 		startTime += elapsedTime;
 	}
+
+
+	//ofLog( OF_LOG_NOTICE, ofToString(ofGetElapsedTimeMillis()%2) );
+	if(ofGetElapsedTimeMillis() % 4 == 0){
+		gifCounter++;
+		if ((unsigned)gifCounter > gifloader.pages.size()-1) gifCounter = 0;
+		gifloader.pages[gifCounter].getTexture().setAlphaMask(fbo.getTexture());
+
+		/*
+		for (int i = 0; i < gifloader.pages.size(); ++i){
+			 gifloader.pages[i].getTexture().setAlphaMask(fbo.getTexture());
+		}
+		*/
+
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+	gifloader.pages[gifCounter].draw(0, 0);
 }
 
 //--------------------------------------------------------------
