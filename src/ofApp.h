@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGif.h"
+#include "ofxEasing.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,8 +25,11 @@ class ofApp : public ofBaseApp{
 		
 		int startTime;
 		int elapsedTime;
+		int initTime;
+		float tweenValue;
 
 		ofFbo fbo;
-		ofxGIF::fiGifLoader gifloader;
 		ofShader shader;
+		ofxGIF::fiGifLoader gifloader;
+		//ofxEasing ofxeasing;
 };

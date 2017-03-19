@@ -1,6 +1,8 @@
 #include "ofApp.h"
 
 int gifCounter = 0;
+bool flip = false;
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -19,6 +21,7 @@ void ofApp::setup(){
 	//ofSetVerticalSync(true);
 	
 	startTime = ofGetElapsedTimeMillis();
+	initTime = 0;
 	elapsedTime = 0;
 
 	ofBackground(0, 0, 255);
@@ -52,11 +55,33 @@ void ofApp::update(){
 		if ((unsigned)gifCounter > gifloader.pages.size()-1) gifCounter = 0;
 		gifloader.pages[gifCounter].getTexture().setAlphaMask(fbo.getTexture());
 	}
+
+	/*
+	auto duration = 10.f;
+	auto endTime = initTime + duration;
+	auto now = ofGetElapsedTimef();
+	auto start = 0.f;
+	auto end = 1.f;
+	if(flip){
+		start = 1.0f;
+		end = 0.0f;
+	}
+
+	tweenValue = ofxeasing::map_clamp(now, initTime, endTime, start, end, &ofxeasing::exp::easeInOut);
+	if(tweenValue >= 1 || tweenValue <= 0.0){
+		flip = !flip;
+		initTime = now;
+	}
+	*/
+
+	tweenValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 1);
+	//tweenValue = sin(ofGetElpasedTimef());
+	//ofLog(OF_LOG_NOTICE, ofToString(tweenValue));
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	//ofClear(255, 0, 0, 128);
+	//ofClear(255, 0, 0);
 	//ofBackground(0, 0, 255);
 	ofSetColor(255);
 	shader.begin();
@@ -66,6 +91,13 @@ void ofApp::draw(){
 	ofSetColor(255, 51, 0);
 	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
 	ofSetColor(255);
+
+
+	fbo.begin();{
+		ofClear(0,255); 
+		ofDrawEllipse(137, 114, 200*tweenValue, 200*tweenValue);
+    }
+	fbo.end();
 		
 	gifloader.pages[gifCounter].draw(0, 0);
 
