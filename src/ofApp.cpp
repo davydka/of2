@@ -7,6 +7,8 @@ void ofApp::setup(){
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
 
+	shader.load("shadersGL3/shader");
+
 	ofSetWindowShape(275, 228);
 	ofSetWindowPosition(1091, 100);
 	ofSetWindowTitle("app");
@@ -54,13 +56,19 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	//ofClear(255, 0, 0, 128);
 	//ofBackground(0, 0, 255);
+	ofSetColor(255);
+	shader.begin();
+	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	shader.end();
 
 	ofSetColor(255, 51, 0);
 	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
 	ofSetColor(255);
 		
 	gifloader.pages[gifCounter].draw(0, 0);
+
 }
 
 //--------------------------------------------------------------

@@ -27,4 +27,5 @@ class ofApp : public ofBaseApp{
 
 		ofFbo fbo;
 		ofxGIF::fiGifLoader gifloader;
+		ofShader shader;
 };
