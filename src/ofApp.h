@@ -30,6 +30,8 @@ class ofApp : public ofBaseApp{
 
 		ofFbo fbo;
 		ofShader shader;
+		ofPlanePrimitive plane;
+		ofImage img;
 		ofxGIF::fiGifLoader gifloader;
 		//ofxEasing ofxeasing;
 };

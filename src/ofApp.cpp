@@ -3,13 +3,15 @@
 int gifCounter = 0;
 bool flip = false;
 
-
 //--------------------------------------------------------------
 void ofApp::setup(){
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
 
 	shader.load("shadersGL3/shader");
+	img.loadImage("images/img.jpg");
+	plane.set(275, 228, 10, 10);
+	plane.mapTexCoords(0, 0, img.getWidth(), img.getHeight());
 
 	ofSetWindowShape(275, 228);
 	ofSetWindowPosition(1091, 100);
@@ -83,10 +85,16 @@ void ofApp::update(){
 void ofApp::draw(){
 	//ofClear(255, 0, 0);
 	//ofBackground(0, 0, 255);
-	ofSetColor(255);
+	img.getTextureReference().bind();
+	//ofSetColor(255);
 	shader.begin();
-	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	ofPushMatrix();
+	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
+	plane.draw();
+	//ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	ofPopMatrix();
 	shader.end();
+	img.getTextureReference().unbind();
 
 	ofSetColor(255, 51, 0);
 	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
