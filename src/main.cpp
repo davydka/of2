@@ -9,7 +9,7 @@ int main( ){
 	//ofSetupOpenGL(&window, 640,480,OF_WINDOW);
 	//ofSetupOpenGL(640,480,OF_WINDOW);
 	
-	ofGLWindowSettings settings;
+	ofGLFWWindowSettings settings;
 	settings.setGLVersion(3, 2);
 	ofCreateWindow(settings);
 

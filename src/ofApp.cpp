@@ -8,7 +8,10 @@ void ofApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
-	ofBackground(0,0,0);
+	//ofBackground(0,0,0);
+
+	
+
 
 	movieMovie.setPixelFormat(OF_PIXELS_NATIVE);
 	//movieMovie.setPixelFormat(OF_PIXELS_I420);
@@ -25,6 +28,27 @@ void ofApp::setup(){
 	plane.set(480, 270, 10, 10);
 	plane.mapTexCoords(0, 0, vidWidth, vidHeight);
 	fbo.allocate(vidWidth, vidHeight);
+
+
+
+
+
+	/*
+	movieMovie2.setPixelFormat(OF_PIXELS_NATIVE);
+	//movieMovie.setPixelFormat(OF_PIXELS_I420);
+	movieMovie2.load("trailer_1080p_inverted.mp4");
+	movieMovie2.setLoopState(OF_LOOP_NORMAL);
+	movieMovie2.play();
+
+	shader2.load("shadersGL3/shader");
+	plane2.set(480, 270, 10, 10);
+	plane2.mapTexCoords(0, 0, vidWidth, vidHeight);
+	fbo2.allocate(vidWidth, vidHeight);
+	*/
+
+
+
+
 
 	float value = vidWidth;
 	ofLogNotice() << "value: " << value;
@@ -50,6 +74,7 @@ void ofApp::update(){
 	//tweenValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 1);
 	//flip++;
 	movieMovie.update();
+	//movieMovie2.update();
 }
 
 //--------------------------------------------------------------
@@ -70,6 +95,25 @@ void ofApp::draw(){
 	plane.draw();
 	shader.end();
 	
+
+
+
+	/*
+	fbo2.begin();
+		if(movieMovie2.isFrameNew()){
+			ofClear(0, 0, 0,255);
+			movieMovie2.draw(0,0);
+		}
+	fbo2.end();
+	
+	ofTexture tex2;
+	shader2.begin();
+	tex2 = fbo2.getTexture();
+	shader2.setUniformTexture("tex0", tex2, 1);
+	ofTranslate(ofGetWidth(), ofGetHeight());
+	plane2.draw();
+	shader2.end();
+	*/
 	
 	//ofSetColor(255, 51, 0);
 	//ofDrawBitmapString( ofGetFrameRate(), 20,30 );

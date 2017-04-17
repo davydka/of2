@@ -37,4 +37,10 @@ class ofApp : public ofBaseApp{
 
 		ofVideoPlayer movieMovie;
 		bool frameByframe;
+
+		ofFbo fbo2;
+		ofShader shader2;
+		ofPlanePrimitive plane2;
+		ofVideoPlayer movieMovie2;
+
 };
