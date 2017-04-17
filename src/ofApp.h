@@ -34,4 +34,7 @@ class ofApp : public ofBaseApp{
 		ofImage img;
 		ofxGIF::fiGifLoader gifloader;
 		//ofxEasing ofxeasing;
+
+		ofVideoPlayer movieMovie;
+		bool frameByframe;
 };

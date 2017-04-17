@@ -7,6 +7,10 @@ void ofApp::setup(){
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
 
+	movieMovie.load("trailer_1080p.mov");
+	movieMovie.setLoopState(OF_LOOP_NORMAL);
+	movieMovie.play();
+
 	shader.load("shadersGL3/shader");
 	img.loadImage("images/img.jpg");
 	plane.set(275, 228, 10, 10);
@@ -28,6 +32,7 @@ void ofApp::setup(){
 void ofApp::update(){
 	//tweenValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 1);
 	flip++;
+	movieMovie.update();
 }
 
 //--------------------------------------------------------------
