@@ -4,22 +4,38 @@ int flip = 0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofSetLogLevel(OF_LOG_VERBOSE);
 
+	//ofEnableArbTex();
+	//ofDisableArbTex();
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
+	ofBackground(0,0,0);
 
-	movieMovie.load("trailer_1080p.mov");
+	movieMovie.setPixelFormat(OF_PIXELS_NATIVE);
+	//movieMovie.setPixelFormat(OF_PIXELS_I420);
+	movieMovie.load("trailer_1080p.mp4");
 	movieMovie.setLoopState(OF_LOOP_NORMAL);
 	movieMovie.play();
 
-	shader.load("shadersGL3/shader");
-	img.loadImage("images/img.jpg");
-	plane.set(275, 228, 10, 10);
-	plane.mapTexCoords(0, 0, img.getWidth(), img.getHeight());
+	ofPixels & pixels = movieMovie.getPixels();
+	int vidWidth = pixels.getWidth();
+	int vidHeight = pixels.getHeight();
 
-	ofSetWindowShape(275, 228);
-	ofSetWindowPosition(1091, 100);
+	shader.load("shadersGL3/shader");
+	img.load("images/img.jpg");
+	plane.set(480, 270, 4, 4);
+	plane.mapTexCoords(0, 0, vidWidth, vidHeight);
+	fbo.allocate(vidWidth, vidHeight);
+
+	float value = vidWidth;
+	ofLogNotice() << "value: " << value;
+	ofLog(OF_LOG_NOTICE, ofToString(vidWidth % 4));
+
+	ofSetWindowShape(1920, 1080);
+	ofSetWindowPosition(0, 0);
 	ofSetWindowTitle("app");
 	
+	//ofSetFrameRate(60);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	
@@ -31,26 +47,29 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	//tweenValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 1);
-	flip++;
+	//flip++;
 	movieMovie.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	fbo.begin();
+		if(movieMovie.isFrameNew()){
+			ofClear(0, 0, 0,255);
+			movieMovie.draw(0,0);
+		}
+	fbo.end();
 	
-	img.getTextureReference().bind();
+	ofTexture tex;
 	shader.begin();
-	ofPushMatrix();
+	tex = fbo.getTexture();
+	shader.setUniformTexture("tex0", tex, 1);
 	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 	plane.draw();
-	ofPopMatrix();
 	shader.end();
-	img.getTextureReference().unbind();
 	
-	//ofLog(OF_LOG_NOTICE, ofToString(flip % 4));
-
-	ofSetColor(255, 51, 0);
-	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
+	//ofSetColor(255, 51, 0);
+	//ofDrawBitmapString( ofGetFrameRate(), 20,30 );
 	
 }
 

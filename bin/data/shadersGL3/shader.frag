@@ -9,5 +9,7 @@ out vec4 outputColor;
  
 void main()
 {
-    outputColor = texture(tex0, texCoordVarying);
+    //outputColor = texture(tex0, texCoordVarying);
+	vec4 tex = texture ( tex0, texCoordVarying );
+	gl_FragColor = vec4(tex.r,tex.g,tex.b,1.0);
 }
