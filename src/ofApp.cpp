@@ -4,10 +4,9 @@ int flip = 0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
-	//ofEnableArbTex();
-	//ofDisableArbTex();
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
 	ofBackground(0,0,0);
 
@@ -23,13 +22,14 @@ void ofApp::setup(){
 
 	shader.load("shadersGL3/shader");
 	img.load("images/img.jpg");
-	plane.set(480, 270, 4, 4);
+	plane.set(480, 270, 10, 10);
 	plane.mapTexCoords(0, 0, vidWidth, vidHeight);
 	fbo.allocate(vidWidth, vidHeight);
 
 	float value = vidWidth;
 	ofLogNotice() << "value: " << value;
-	ofLog(OF_LOG_NOTICE, ofToString(vidWidth % 4));
+	ofLog(OF_LOG_NOTICE, ofToString(OF_PIXELS_NATIVE));
+	//ofLog(OF_LOG_NOTICE, "%s", pixels.getPixelFormat());
 
 	ofSetWindowShape(1920, 1080);
 	ofSetWindowPosition(0, 0);
@@ -42,6 +42,7 @@ void ofApp::setup(){
 	startTime = ofGetElapsedTimeMillis();
 	initTime = 0;
 	elapsedTime = 0;
+	
 }
 
 //--------------------------------------------------------------
@@ -53,6 +54,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	
 	fbo.begin();
 		if(movieMovie.isFrameNew()){
 			ofClear(0, 0, 0,255);
@@ -67,6 +69,7 @@ void ofApp::draw(){
 	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 	plane.draw();
 	shader.end();
+	
 	
 	//ofSetColor(255, 51, 0);
 	//ofDrawBitmapString( ofGetFrameRate(), 20,30 );
