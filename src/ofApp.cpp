@@ -117,23 +117,17 @@ void ofApp::draw(){
 
 			ofClear(bkR, bkG, bkB, 255);
 
-			movieMovie.draw(0,0);
+			movieMovie.draw(0,mouseY);
 			movieMovie2.draw(200,100);
 
 			movieMovie.draw(500,500);
 			movieMovie2.draw(700,600);
 
 			movieMovie.draw(1500,500);
-			movieMovie2.draw(1700,600);
+			movieMovie2.draw(mouseX,800);
 
 			img.draw(860, 440);
 		}
-		/*
-		if(movieMovie2.isFrameNew()){
-			ofClear(0, 0, 0,255);
-			movieMovie2.draw(100,100);
-		}
-		*/
 	fbo.end();
 
 	
