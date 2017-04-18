@@ -32,6 +32,7 @@ class ofApp : public ofBaseApp{
 		ofShader shader;
 		ofPlanePrimitive plane;
 		ofImage img;
+		ofImage noiseImg;
 		ofxGIF::fiGifLoader gifloader;
 		//ofxEasing ofxeasing;
 

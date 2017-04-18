@@ -1,6 +1,9 @@
 #include "ofApp.h"
 
 int flip = 0;
+float bkR = 0;
+float bkG = 0;
+float bkB = 0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -8,7 +11,7 @@ void ofApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
-	//ofBackground(0,0,0);
+	ofBackground(0,0,0);
 
 	
 
@@ -26,7 +29,7 @@ void ofApp::setup(){
 	shader.load("shadersGL3/shader");
 	img.load("images/green.png");
 	//plane.set(480, 270, 10, 10);
-	plane.set(1920, 1080, 10, 10);
+	plane.set(1920, 1080, 80, 60);
 	//plane.mapTexCoords(0, 0, 1920, 1080);
 	plane.mapTexCoords(0, 0, 1920, 1080);
 	//plane.mapTexCoords(0, 0, vidWidth, vidHeight);
@@ -34,6 +37,7 @@ void ofApp::setup(){
 	fbo.allocate(1920, 1080);
 	//fbo.allocate(480, 270);
 
+	noiseImg.allocate(80, 60, OF_IMAGE_GRAYSCALE);
 
 
 
@@ -50,7 +54,7 @@ void ofApp::setup(){
 	*/
 	plane2.set(480, 270, 10, 10);
 	plane2.mapTexCoords(0, 0, vidWidth, vidHeight);
-	fbo2.allocate(vidWidth, vidHeight);
+	fbo2.allocate(1920, 1080);
 
 
 
@@ -77,18 +81,41 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	bkR = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 255);
+	bkG = ofMap(cos(ofGetElapsedTimef()), -1, 1, 0, 255);
+	bkB = ofMap(sin(ofGetElapsedTimef()), -1, 1, 255, 0);
 	//tweenValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, 1);
 	//flip++;
+
+	//ofLog(OF_LOG_NOTICE, ofToString(mouseX));
+
+	float noiseScale = ofMap(mouseX, 0, ofGetWidth(), 0, 0.1);
+    float noiseVel = ofGetElapsedTimef();
+
+    ofPixels & npixels = noiseImg.getPixels();
+    int w = noiseImg.getWidth();
+    int h = noiseImg.getHeight();
+    for(int y=0; y<h; y++) {
+        for(int x=0; x<w; x++) {
+            int i = y * w + x;
+            float noiseVelue = ofNoise(x * noiseScale, y * noiseScale, noiseVel);
+            npixels[i] = 255 * noiseVelue;
+        }
+    }
+    noiseImg.update();
+
 	movieMovie.update();
 	movieMovie2.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	ofBackground(bkR,bkG,bkB);
 	
 	fbo.begin();
 		if(movieMovie.isFrameNew()){
-			ofClear(0, 0, 0,255);
+
+			ofClear(bkR, bkG, bkB, 255);
 
 			movieMovie.draw(0,0);
 			movieMovie2.draw(200,100);
@@ -109,27 +136,28 @@ void ofApp::draw(){
 		*/
 	fbo.end();
 
-	/*
+	
 	fbo2.begin();
-		if(movieMovie2.isFrameNew()){
-			ofClear(0, 0, 0,255);
-			movieMovie2.draw(0,0);
-		}
+		noiseImg.draw(0,0,1920,1080);
 	fbo2.end();
-	*/
+	
 	
 	ofTexture tex0;
-	//ofTexture tex1;
+	ofTexture tex1;
 	shader.begin();
 	tex0 = fbo.getTexture();
-	tex0.setTextureWrap(GL_REPEAT, GL_REPEAT);
 	//tex1 = fbo2.getTexture();
+	tex1 = fbo2.getTexture();
 	shader.setUniformTexture("tex0", tex0, 1);
-	//shader.setUniformTexture("tex1", tex1, 2);
+	shader.setUniformTexture("tex1", tex1, 2);
 	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
 	plane.draw();
 	shader.end();
 	
+	ofTranslate(-ofGetWidth()/2, -ofGetHeight()/2);
+	ofSetColor(ofColor::white);
+	noiseImg.draw(0, 0);
+
 
 
 
