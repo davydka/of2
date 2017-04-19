@@ -5,15 +5,64 @@ float bkR = 0;
 float bkG = 0;
 float bkB = 0;
 
+class Space {
+	public:
+		int tiles = 14;
+		int rows = 6;
+		int cols = 11;
+		int x = 0;
+		int y = 0;
+		float scale = 0.5;
+		float zoom = 2.0;
+		int width = 200;
+		int height = 200;
+		float angle = ofDegToRad(90);
+};
+
+Space* space = new Space();
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	//ofSetLogLevel(OF_LOG_VERBOSE);
 
 	ofLog(OF_LOG_NOTICE, "\n\tsetting up app\n");
+	ofLog(OF_LOG_NOTICE, "\n\t"+ofToString(space->tiles)+"\n");
 	ofBackground(0,0,0);
 
-	
+	camWidth = 320;  // try to grab at this size.
+    camHeight = 240;
+
+    //we can now get back a list of devices.
+    vector<ofVideoDevice> devices = vidGrabber.listDevices();
+
+    for(int i = 0; i < devices.size(); i++){
+        if(devices[i].bAvailable){
+            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName;
+        }else{
+            ofLogNotice() << devices[i].id << ": " << devices[i].deviceName << " - unavailable ";
+        }
+    }
+
+
+
+
+
+
+
+
+	vidGrabber.setDeviceID(0);
+	vidGrabber.setDesiredFrameRate(60);
+	vidGrabber.initGrabber(camWidth, camHeight);
+
+	videoInverted.allocate(camWidth, camHeight, OF_PIXELS_RGB);
+	//videoInverted.allocate(camWidth, camHeight, OF_PIXELS_NATIVE);
+	videoTexture.allocate(videoInverted);
+
+
+
+
+
 
 
 	movieMovie.setPixelFormat(OF_PIXELS_NATIVE);
@@ -70,7 +119,7 @@ void ofApp::setup(){
 	ofSetWindowTitle("app");
 	
 	//ofSetFrameRate(60);
-	ofSetFrameRate(30);
+	ofSetFrameRate(45);
 	ofSetVerticalSync(true);
 	
 	startTime = ofGetElapsedTimeMillis();
@@ -106,6 +155,18 @@ void ofApp::update(){
 
 	movieMovie.update();
 	movieMovie2.update();
+	
+
+
+	vidGrabber.update();
+	if(vidGrabber.isFrameNew()){
+        ofPixels & pixelsV = vidGrabber.getPixels();
+        for(int i = 0; i < pixelsV.size(); i++){
+            videoInverted[i] = 255 - pixelsV[i];
+        }
+        videoTexture.loadData(videoInverted);
+    }
+
 }
 
 //--------------------------------------------------------------
@@ -113,26 +174,34 @@ void ofApp::draw(){
 	ofBackground(bkR,bkG,bkB);
 	
 	fbo.begin();
-		if(movieMovie.isFrameNew()){
-
+		//if(movieMovie.isFrameNew()){
 			ofClear(bkR, bkG, bkB, 255);
 
-			movieMovie.draw(0,mouseY);
-			movieMovie2.draw(200,100);
+			for(int r=-1; r<space->rows+1; r++){
+				for(int c=-1; c<space->cols+1; c++){
+					movieMovie.draw(
+							(space->height * c) + (space->y * c),
+							(space->width * r) + (space->x * r),
+							movieMovie.getWidth()*space->scale,
+							movieMovie.getHeight()*space->scale
+							);
+				}
+			}
 
-			movieMovie.draw(500,500);
-			movieMovie2.draw(700,600);
+			//movieMovie.draw(100,100);
+			//movieMovie2.draw(movieMovie.getWidth() + 100,100);
 
-			movieMovie.draw(1500,500);
-			movieMovie2.draw(mouseX,800);
 
-			img.draw(860, 440);
-		}
+			//vidGrabber.draw(ofGetWidth()/2, ofGetHeight()/2);
+			//videoTexture.draw(ofGetWidth()/2 + camWidth, ofGetHeight()/2, camWidth, camHeight);
+
+			//img.draw(860, 440);
+		//}
 	fbo.end();
 
 	
 	fbo2.begin();
-		noiseImg.draw(0,0,1920,1080);
+		//noiseImg.draw(1,0,1920,1080);
 	fbo2.end();
 	
 	
@@ -150,7 +219,7 @@ void ofApp::draw(){
 	
 	ofTranslate(-ofGetWidth()/2, -ofGetHeight()/2);
 	ofSetColor(ofColor::white);
-	noiseImg.draw(0, 0);
+	//noiseImg.draw(0, 0);
 
 
 
@@ -172,8 +241,9 @@ void ofApp::draw(){
 	shader2.end();
 	*/
 	
-	//ofSetColor(255, 51, 0);
-	//ofDrawBitmapString( ofGetFrameRate(), 20,30 );
+	ofSetColor(255, 51, 0);
+	ofDrawBitmapString( ofGetFrameRate(), 20,30 );
+	ofSetColor(255,225,255);
 	
 }
 

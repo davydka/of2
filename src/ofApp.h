@@ -39,6 +39,12 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer movieMovie;
 		bool frameByframe;
 
+		ofVideoGrabber vidGrabber;
+		ofPixels videoInverted;
+		ofTexture videoTexture;
+		int camWidth;
+		int camHeight;
+
 		ofFbo fbo2;
 		ofShader shader2;
 		ofPlanePrimitive plane2;
